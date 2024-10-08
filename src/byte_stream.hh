@@ -4,6 +4,10 @@
 #include <string>
 #include <string_view>
 
+#include <queue>
+#include <iostream>
+#include <cstring>
+
 class Reader;
 class Writer;
 
@@ -23,8 +27,21 @@ public:
 
 protected:
   // Please add any additional state to the ByteStream here, and not to the Writer and Reader interfaces.
-  uint64_t capacity_;
-  bool error_ {};
+  uint64_t capacity_;     // 构建时默认的容量
+  bool error_ {};         // 是否出现 error
+
+  uint64_t used_capacity_; // 使用的容量，也就是当前 bytes 的数量
+  uint64_t available_capacity_;// 可用的容量
+  uint64_t bytes_poped_;  // 总共 pop 的 bytes
+  uint64_t bytes_pushed_; // 总共 push 的 bytes
+  bool is_closed_;        // 是否关闭流，由输出方决定
+  bool is_finished_;      // 是否结束联通，由接收方结束
+
+  // use string to store bytes
+  // std::string stream_{};
+  // std::queue<char16_t> stream_;
+  std::deque<std::string> stream_;
+
 };
 
 class Writer : public ByteStream

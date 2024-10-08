@@ -9,8 +9,34 @@ using namespace std;
 
 void get_URL( const string& host, const string& path )
 {
-  cerr << "Function called: get_URL(" << host << ", " << path << ")\n";
-  cerr << "Warning: get_URL() has not been implemented yet.\n";
+  // cerr << "Function called: get_URL(" << host << ", " << path << ")\n";
+  // cerr << "Warning: get_URL() has not been implemented yet.\n";
+  // example:
+  // host: cs144.keithw.org
+  // path: /hello
+  // 构建 address
+  Address address(host,"http");
+  // 构建 tcp包
+  TCPSocket tcpsocket;
+  vector<string> option_val;
+  option_val.push_back("GET "+path+" HTTP/1.1\r\n");
+  option_val.push_back("HOST: "+host+"\r\n");
+  option_val.push_back("Connection: close\r\n");
+  option_val.push_back("\r\n");
+
+  tcpsocket.connect(address);
+  // cout<<"Connect finish."<<endl;
+
+  tcpsocket.write(option_val);
+  // cout<<"Write finish."<<endl;
+
+  string result;
+  while(!tcpsocket.eof())
+  {
+    tcpsocket.read(result);
+    cout<<result;
+  }
+
 }
 
 int main( int argc, char* argv[] )
